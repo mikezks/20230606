@@ -17,6 +17,12 @@ export const FLIGHT_BOOKING_ROUTES: Routes = [
       {
         path: 'flight-edit/:id',
         component: FlightEditComponent,
+        /* canActivate: [
+          () => {
+            console.log('flight-edit/:id guard runs');
+            return true;
+          }
+        ] */
       },
       {
         path: 'flight-typeahead',

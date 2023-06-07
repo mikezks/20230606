@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   CityValidatorDirective,
   RoundtripValidatorDirective,
@@ -19,6 +19,7 @@ import { FlightService, initFlight } from '@flight-demo/tickets/domain';
     ValidationErrorsComponent,
     CityValidatorDirective,
     RoundtripValidatorDirective,
+    RouterLink
   ],
   templateUrl: './flight-edit.component.html',
   styleUrls: ['./flight-edit.component.css'],
