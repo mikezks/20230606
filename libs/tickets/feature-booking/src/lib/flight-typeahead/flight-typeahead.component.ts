@@ -1,28 +1,46 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Subscription, share, tap, timer } from 'rxjs';
+import { Component, inject } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Flight, FlightService } from '@flight-demo/tickets/domain';
+import { Observable, debounceTime, delay, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'tickets-flight-typeahead',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule
+  ],
   templateUrl: './flight-typeahead.component.html',
   styleUrls: ['./flight-typeahead.component.css'],
 })
-export class FlightTypeaheadComponent implements OnInit, OnDestroy {
-  timer$ = timer(0, 1_000).pipe(
-    tap(num => console.log('Observable produces value', num)),
-    // share()
-  );
-  subscription = new Subscription();
+export class FlightTypeaheadComponent {
+  private flightService = inject(FlightService);
+  control = new FormControl('', { nonNullable: true });
+  flights$ = this.initFlights();
+  loading = false;
 
-  ngOnInit(): void {
-    this.subscription.add(
-      this.timer$.subscribe(console.log)
+  private initFlights(): Observable<Flight[]> {
+    /**
+     * Stream 1: Input User Text Change
+     *  - Trigger
+     *  - Data Provider
+     */
+    return this.control.valueChanges.pipe(
+      // Filtering STARTS
+      filter(airport => airport.length > 2),
+      debounceTime(300),
+      distinctUntilChanged(),
+      // Filtering ENDS,
+      // Side-Effect: Loading
+      tap(() => this.loading = true),
+      /**
+       * Stream 2: HTTP Call -> Flight Data
+       *  - Data Provider
+       */
+      switchMap(airport => this.flightService.find(airport, '')),
+      // Side-Effect: Loading
+      tap(() => this.loading = false),
     );
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 }
