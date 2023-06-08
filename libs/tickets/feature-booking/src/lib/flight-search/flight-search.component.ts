@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CityPipe } from '@flight-demo/shared/ui-common';
-import { Flight, ticketsActions, ticketsFeature } from '@flight-demo/tickets/domain';
+import { Flight, selectActiveUserFlights, ticketsActions, ticketsFeature } from '@flight-demo/tickets/domain';
 import { Store } from '@ngrx/store';
 import { FlightCardComponent } from '../flight-card/flight-card.component';
 
@@ -18,7 +18,7 @@ export class FlightSearchComponent {
 
   from = 'London';
   to = 'New York';
-  flights$ = this.store.select(ticketsFeature.selectFlights);
+  flights$ = this.store.select(selectActiveUserFlights);
   selectedFlight: Flight | undefined;
 
   basket: Record<number, boolean> = {

@@ -7,12 +7,36 @@ export interface TicketsState {
   flights: Flight[];
   basket: unknown;
   tickets: unknown;
+  bookings: {
+    flightId: number;
+    passengerId: number;
+  }[];
+  passengers: Record<number, {
+    id: number;
+    name: string;
+  }>;
+  user: {
+    username: string;
+    passengerId: number;
+  };
 }
 
 export const initialTicketsState: TicketsState = {
   flights: [],
   basket: {},
-  tickets: {}
+  tickets: {},
+  bookings: [
+    { passengerId: 1, flightId: 1286 },
+    // { passengerId: 1, flightId: 1287 },
+    { passengerId: 1, flightId: 1288 },
+  ],
+  passengers: {
+    1: { id: 1, name: 'Michael Egger-Zikes' }
+  },
+  user: {
+    username: 'michael.egger-zikes',
+    passengerId: 1
+  }
 };
 
 
