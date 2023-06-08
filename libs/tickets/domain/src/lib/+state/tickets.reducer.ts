@@ -33,6 +33,9 @@ export const initialTicketsState: TicketsState = {
   passengers: {
     1: { id: 1, name: 'Michael Egger-Zikes' }
   },
+  /* passengerIds: [
+    2, 1, 5, 3, 7, 15
+  ], */
   user: {
     username: 'michael.egger-zikes',
     passengerId: 1
