@@ -1,4 +1,6 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -13,6 +15,7 @@ import { FlightEditReactiveComponent } from '../flight-edit-reactive/flight-edit
 import { RouterLink } from '@angular/router';
 import { CityPipe, StatusToggleComponent } from '@flight-demo/shared/ui-common';
 import { initFlight } from '@flight-demo/tickets/domain';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-flight-card',
@@ -20,6 +23,7 @@ import { initFlight } from '@flight-demo/tickets/domain';
   imports: [CommonModule, CityPipe, StatusToggleComponent, RouterLink],
   templateUrl: './flight-card.component.html',
   styleUrls: ['./flight-card.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FlightCardComponent {
   private dialog = inject(MatDialog);
@@ -29,6 +33,21 @@ export class FlightCardComponent {
   @Input() item = initFlight;
   @Input() selected = false;
   @Output() selectedChange = new EventEmitter<boolean>();
+
+  name$ = new BehaviorSubject('Peter');
+  name = this.name$.value;
+  cdRef = inject(ChangeDetectorRef);
+
+  constructor() {
+    this.name$.subscribe(
+      name => {
+        this.name = name;
+        this.cdRef.markForCheck();
+      }
+    );
+
+    setTimeout(() => this.name$.next('Mary'), 5_000);
+  }
 
   select() {
     this.selected = true;
