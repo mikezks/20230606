@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Flight, FlightService } from '@flight-demo/tickets/domain';
-import { Observable, debounceTime, delay, distinctUntilChanged, filter, iif, of, switchMap, tap } from 'rxjs';
+import { Observable, catchError, debounceTime, delay, distinctUntilChanged, filter, iif, of, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'tickets-flight-typeahead',
@@ -41,7 +41,9 @@ export class FlightTypeaheadComponent {
       switchMap(airport =>
         iif(
           () => airport.length > 2,
-          this.flightService.find(airport, ''),
+          this.flightService.find(airport, '').pipe(
+            catchError(()=> of([]))
+          ),
           of([])
         )
       ),
